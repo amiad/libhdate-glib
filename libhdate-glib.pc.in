@@ -1,0 +1,11 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libhdate-glib
+Description: A gobject library for hebrew dates
+Requires: glib-2.0,gobject-2.0
+Version: @VERSION@
+Libs: -L${libdir} -lm -lhdate -lhdate-glib
+Cflags: -I${includedir}
