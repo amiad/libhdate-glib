@@ -33,16 +33,16 @@ namespace LibHdate {
 	unowned string get_int_string (int n);
 	
 	[CCode (cname = "hdate_get_day_string")]
-	unowned string get_day_string (int day, bool s);
+	unowned string get_day_string (int day, bool? s = false);
 	
 	[CCode (cname = "hdate_get_hebrew_month_string")]
-	unowned string get_hebrew_month_string (int month, bool s);
+	unowned string get_hebrew_month_string (int month, bool? s = false);
 	
 	[CCode (cname = "hdate_get_holyday_string")]
-	unowned string get_holyday_string (int holyday, bool s);
+	unowned string get_holyday_string (int holyday, bool? s = false);
 	
 	[CCode (cname = "hdate_get_parasha_string")]
-	unowned string get_parasha_string (int parasha, bool s);
+	unowned string get_parasha_string (int parasha, bool? s = false);
 	
 	[CCode (cname = "hdate_get_size_of_hebrew_year")]
 	int get_size_of_hebrew_year (int hebrew_year);
