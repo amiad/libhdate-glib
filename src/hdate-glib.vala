@@ -24,11 +24,11 @@ using LibHdate;
 
 public class Hdate : Object {
 	
-	public HdateC h;
+	public HdateC hdate;
 	
-	Hdate() {
-		h = new HdateC();
-		h.set_gdate(0,0,0);
+	public Hdate() {
+		hdate = new HdateC();
+		hdate.set_gdate();
 	}
 }
 

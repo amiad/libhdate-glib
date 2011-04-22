@@ -3,13 +3,12 @@ namespace LibHdate {
 	[Compact]
 	[CCode (cprefix = "hdate_", cname = "hdate_struct", free_function = "")]
 	public class HdateC {
+		[CCode (cname = "new_hdate")]
 		public HdateC();
 		
-		public HdateC set_gdate (int d, int m, int y);
+		public HdateC set_gdate (int? d = 0, int? m = 0, int? y = 0);
 		public HdateC set_hdate (int d, int m, int y);
 		public HdateC set_jd (int jd);
-		
-		public string get_format_date (bool diaspora, bool s);
 		
 		public int get_parasha (bool diaspora);
 		public int get_holyday (bool diaspora);
@@ -27,35 +26,37 @@ namespace LibHdate {
 		public int get_days ();
 		public int get_weeks ();
 		
-		[CCode (cname = "hdate_get_int_string")]
-		public string get_int_string (int n);
-		
-		[CCode (cname = "hdate_get_day_string")]
-		public string get_day_string (int day, bool s);
-		
-		[CCode (cname = "hdate_get_hebrew_month_string")]
-		public string get_hebrew_month_string (int month, bool s);
-		
-		[CCode (cname = "hdate_get_holyday_string")]
-		public string get_holyday_string (int holyday, bool s);
-		
-		[CCode (cname = "hdate_get_parasha_string")]
-		public string get_parasha_string (int parasha, bool s);
-		
-		[CCode (cname = "hdate_get_size_of_hebrew_year")]
-		public int get_size_of_hebrew_year (int hebrew_year);
-		
-		[CCode (cname = "hdate_get_holyday_type")]
-		int get_holyday_type (int holyday);
-		
-		[CCode (cname = "hdate_get_utc_sun_time")]
-		public void get_utc_sun_time (int day, int month, int year, 
-			double latitude, double longitude, out int sunrise, out int sunset);
-		
-		[CCode (cname = "hdate_get_utc_sun_time_full")]
-		public void get_utc_sun_time_full (int day, int month, int year, double latitude, double longitude, 
-			out int sun_hour, out int first_light, out int talit, out int sunrise,
-			out int midday, out int sunset, out int first_stars, out int three_stars);
+		public unowned string get_format_date (bool? diaspora = false, bool? s = false);
 	}
+	
+	[CCode (cname = "hdate_get_int_string")]
+	unowned string get_int_string (int n);
+	
+	[CCode (cname = "hdate_get_day_string")]
+	unowned string get_day_string (int day, bool s);
+	
+	[CCode (cname = "hdate_get_hebrew_month_string")]
+	unowned string get_hebrew_month_string (int month, bool s);
+	
+	[CCode (cname = "hdate_get_holyday_string")]
+	unowned string get_holyday_string (int holyday, bool s);
+	
+	[CCode (cname = "hdate_get_parasha_string")]
+	unowned string get_parasha_string (int parasha, bool s);
+	
+	[CCode (cname = "hdate_get_size_of_hebrew_year")]
+	int get_size_of_hebrew_year (int hebrew_year);
+	
+	[CCode (cname = "hdate_get_holyday_type")]
+	int get_holyday_type (int holyday);
+	
+	[CCode (cname = "hdate_get_utc_sun_time")]
+	void get_utc_sun_time (int day, int month, int year, 
+		double latitude, double longitude, out int sunrise, out int sunset);
+	
+	[CCode (cname = "hdate_get_utc_sun_time_full")]
+	void get_utc_sun_time_full (int day, int month, int year, double latitude, double longitude, 
+		out int sun_hour, out int first_light, out int talit, out int sunrise,
+		out int midday, out int sunset, out int first_stars, out int three_stars);
 }
 
