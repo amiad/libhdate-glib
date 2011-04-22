@@ -24,26 +24,11 @@ using LibHdate;
 
 public class Hdate : Object {
 	
-	private HdateC h;
-	private int diaspora;
-	private double latitude;
-	private double longitude;
-	private int tz;
-		
-	public Hdate () {
-		/* init hdate struct */
+	public HdateC h;
+	
+	Hdate() {
 		h = new HdateC();
 		h.set_gdate(0,0,0);
-		
-		/* default is in israel */
-		diaspora = 0;
-		
-		/* default localeconv is Tel-Aviv winter time */
-		latitude = 32.0;
-		longitude = -34.0;
-		tz = 2;
-		
 	}
-	
 }
 

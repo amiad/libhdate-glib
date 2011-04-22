@@ -30,6 +30,7 @@ AC_SUBST(VAPIDIR)
 
 AC_CONFIG_FILES([Makefile
 	libhdate-glib.pc
+	vapi/Makefile
 	src/Makefile])
 
 AC_OUTPUT

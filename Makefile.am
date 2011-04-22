@@ -4,6 +4,7 @@ NULL =
 
 SUBDIRS = \
 	src \
+	vapi \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
