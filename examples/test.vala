@@ -28,5 +28,5 @@ using LibHdateGlib;
 void main () {
 	Hdate h = new Hdate();
 	
-	print ("%s\n", h.hdate.get_format_date());
+	print ("%s\n", h.get_format_date());
 }
