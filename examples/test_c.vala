@@ -20,7 +20,7 @@
  */
  
 /* compile:
-	valac --pkg libhdate-glib --pkg libhdate test_c.vala
+	valac --pkg libhdate test_c.vala
  */
 
 using LibHdate;
