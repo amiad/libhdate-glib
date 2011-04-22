@@ -25,3 +25,33 @@ EXTRA_DIST = \
 DISTCLEANFILES = \
 	$(NULL)
 
+CLEANFILES = \
+	$(NULL)
+
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
+INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
+
+if HAVE_INTROSPECTION
+introspection_sources = $(libhdate_glib_la_SOURCES) hdate-glib.h hdate-glib.c
+
+LibHdateGlib.gir: libhdate_glib.la
+LibHdateGlib_gir_INCLUDES = GObject-2.0
+LibHdateGlib_gir_CFLAGS = $(INCLUDES)
+LibHdateGlib_gir_LIBS = libhdate_glib.la
+LibHdateGlib_gir_FILES = $(introspection_sources)
+LibHdateGlib_gir_PACKAGES = libhdate
+LibHdateGlib_gir_NAMESPACE = LibHdateGlib
+INTROSPECTION_GIRS += LibHdateGlib.gir
+
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibdir = $(libdir)/girepository-1.0
+typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+
+CLEANFILES += $(gir_DATA) $(typelib_DATA)
+endif
+
+

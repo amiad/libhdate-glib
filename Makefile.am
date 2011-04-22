@@ -2,6 +2,8 @@ NULL =
 
 #Build in these directories:
 
+DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
+
 SUBDIRS = \
 	src \
 	vapi \
