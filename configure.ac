@@ -1,4 +1,4 @@
-AC_INIT([libhdate-glib], [0.1.0], [kobi.zamir@gmail.com], [libhdate-glib])
+AC_INIT([libhdate-glib], [0.2.0], [kobi.zamir@gmail.com], [libhdate-glib])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([dist-bzip2])
