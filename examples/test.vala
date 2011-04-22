@@ -22,7 +22,9 @@
 /* compile:
 	valac --pkg libhdate-glib --pkg libhdate test.vala
  */
- 
+
+using LibHdateGlib;
+
 void main () {
 	Hdate h = new Hdate();
 	

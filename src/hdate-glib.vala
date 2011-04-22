@@ -22,13 +22,14 @@
 using GLib;
 using LibHdate;
 
-public class Hdate : Object {
+namespace LibHdateGlib {
+	public class Hdate : Object {
 	
-	public HdateC hdate;
+		public HdateC hdate;
 	
-	public Hdate() {
-		hdate = new HdateC();
-		hdate.set_gdate();
+		public Hdate() {
+			hdate = new HdateC();
+			hdate.set_gdate();
+		}
 	}
 }
-
