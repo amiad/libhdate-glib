@@ -1,4 +1,4 @@
-/* main.vala
+/* hdate-glib.vala
  *
  * Copyright (C) 2010  Yaacov Zamir
  * 
