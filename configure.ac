@@ -20,16 +20,25 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 GLIB_REQUIRED=2.12.0
-VALA_VER_MIN=`valac --version | cut -f2 -d.`
 
-PKG_CHECK_MODULES(HDATE_GLIB, libhdate vala-0.$VALA_VER_MIN glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
+AC_ARG_WITH(vala-pkg,
+	[AS_HELP_STRING([--with-vala-pkg=PKG],
+	[vala pkg-config package])])
+
+if test "$with_vala_pkg" = "" ; then
+	VALA_PKG="vala-0.10"
+else
+	VALA_PKG=$with_vala_pkg
+fi
+
+PKG_CHECK_MODULES(HDATE_GLIB, libhdate $VALA_PKG glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
 AC_SUBST(HDATE_GLIB_CFLAGS)
 AC_SUBST(HDATE_GLIB_LIBS)
 
 GOBJECT_INTROSPECTION_CHECK([0.6.7])
 
 
-VAPIDIR=`pkg-config --variable=vapidir vala-0.$VALA_VER_MIN`
+VAPIDIR=`pkg-config --variable=vapidir $VALA_PKG`
 AC_SUBST(VAPIDIR)
 
 AC_CONFIG_FILES([Makefile
