@@ -27,7 +27,8 @@ AC_SUBST(HDATE_GLIB_LIBS)
 
 GOBJECT_INTROSPECTION_CHECK([0.6.7])
 
-VAPIDIR=`pkg-config --variable=vapidir vala-0.10`
+VALA_VER_MIN=`valac --version | cut -f2 -d.`
+VAPIDIR=`pkg-config --variable=vapidir vala-0.$VALA_VER_MIN`
 AC_SUBST(VAPIDIR)
 
 AC_CONFIG_FILES([Makefile
