@@ -26,7 +26,7 @@ AC_ARG_WITH(vala-pkg,
 	[vala pkg-config package])])
 
 if test "$with_vala_pkg" = "" ; then
-	VALA_PKG="vala-0.10"
+	VALA_PKG="libvala-0.12"
 else
 	VALA_PKG=$with_vala_pkg
 fi
