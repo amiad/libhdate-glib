@@ -104,6 +104,10 @@ namespace LibHdateGlib {
 			return hdate.get_weeks ();
 		}
 		
+		public string get_string (int type_of_string, int index, bool? s = false, bool? hebrew = false) {
+			return LibHdate.get_string (type_of_string, index, s, hebrew);
+		}
+		
 		public string get_format_date (bool? diaspora = false, bool? s = false) {
 			return hdate.get_format_date (diaspora, s);
 		}
