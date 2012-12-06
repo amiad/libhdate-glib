@@ -1,4 +1,4 @@
-AC_INIT([libhdate-glib], [0.3.0], [kobi.zamir@gmail.com], [libhdate-glib])
+AC_INIT([libhdate-glib], [0.5.0], [kobi.zamir@gmail.com], [libhdate-glib])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([dist-bzip2])
@@ -17,18 +17,23 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 GLIB_REQUIRED=2.12.0
+HDATE_REQUIRED=1.6.0
 
 AC_ARG_WITH(vala-pkg,
 	[AS_HELP_STRING([--with-vala-pkg=PKG],
 	[vala pkg-config package])])
 
 if test "$with_vala_pkg" = "" ; then
-	VALA_PKG="libvala-0.12"
+	valac_version_cur=`$VALAC --version | cut -d" " -f2 | cut -d. -f1`
+	valac_version_rev=`$VALAC --version | cut -d" " -f2 | cut -d. -f2`
+	VALA_PKG="libvala-"$valac_version_cur.$valac_version_rev
 else
 	VALA_PKG=$with_vala_pkg
 fi
 
-PKG_CHECK_MODULES(HDATE_GLIB, libhdate $VALA_PKG glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
+libhdate_version=`pkg-config --modversion libhdate`
+
+PKG_CHECK_MODULES(HDATE_GLIB, libhdate >= $HDATE_REQUIRED $VALA_PKG glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
 AC_SUBST(HDATE_GLIB_CFLAGS)
 AC_SUBST(HDATE_GLIB_LIBS)
 
@@ -44,4 +49,11 @@ AC_CONFIG_FILES([Makefile
 	src/Makefile])
 
 AC_OUTPUT
+
+echo
+echo "libvala-glib:   $VERSION"
+echo "------------------------"
+echo "using libhdate: $libhdate_version"
+echo "using vala-pkg: $VALA_PKG"
+echo "using valac:    $VALAC"
 
