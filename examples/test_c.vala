@@ -28,6 +28,6 @@ using LibHdate;
 void main () {
 	HdateC h = new HdateC();
 	
-	h.set_gdate();
-	print ("%s\n", h.get_format_date());
+	h.set_gdate(0, 0, 0);
+	print ("%s\n", h.get_format_date(false, false));
 }

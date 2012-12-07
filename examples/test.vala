@@ -27,6 +27,7 @@ using LibHdateGlib;
 
 void main () {
 	Hdate h = new Hdate();
+	h.set_use_hebrew(true);
 	
-	print ("%s\n", h.get_format_date());
+	print ("%s\n", h.to_string());
 }
