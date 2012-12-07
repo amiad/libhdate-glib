@@ -3,4 +3,5 @@
 from gi.repository.LibHdateGlib import Hdate
 h = Hdate.new()
 
-print (h.get_format_date(0,0));
+h.set_use_hebrew(True)
+print (h.to_string());
