@@ -402,8 +402,8 @@ namespace LibHdateGlib {
     }
     
     public string min_to_string (int min) {
-      int hour = (min - (_tz + _dst) * 60) / 60;
-      int minute = (min - (_tz + _dst) * 60) % 60;
+      int hour = (min + (_tz + _dst) * 60) / 60;
+      int minute = (min + (_tz + _dst) * 60) % 60;
       string output;
       
       output = "%02d:%02d".printf(hour, minute);
