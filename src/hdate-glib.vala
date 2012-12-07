@@ -150,7 +150,39 @@ namespace LibHdateGlib {
     }
     
     public string to_string () {
-      return hdate.get_format_date (_diaspora, _use_short_format);
+      string output;
+      int holyday;
+      
+      if (_use_short_format) {
+        output = "%s %s %s".printf (
+          get_int_string (get_hday ()),
+          get_hebrew_month_string (get_hmonth ()),
+          get_int_string (get_hyear ())
+        );
+      } else {
+        output = get_dow_string (get_day_of_the_week());
+        
+        output += " %s %d %d".printf (
+          get_greg_month_string (get_gmonth ()),
+          get_gday (),
+          get_gyear ()
+        );
+        
+        output += ", %s %s %s".printf(
+          get_int_string (get_hday ()),
+          get_hebrew_month_string (get_hmonth ()),
+          get_int_string (get_hyear ())
+        );
+        
+        holyday = get_holyday ();
+        if (holyday != 0) {
+          output += ", %s".printf(
+            get_holyday_string (holyday)
+          );
+        }
+      }
+      
+      return output;
     }
     
     public string get_format_date () {

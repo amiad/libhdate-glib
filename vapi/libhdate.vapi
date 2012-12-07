@@ -30,7 +30,7 @@ namespace LibHdate {
   }
   
   [CCode (cname = "hdate_string")]
-  string hdate_string(int type, int index, bool s, bool hebrew);
+  unowned string hdate_string(int type, int index, bool s, bool hebrew);
   
   [CCode (cname = "hdate_get_size_of_hebrew_year")]
   int get_size_of_hebrew_year (int hebrew_year);

@@ -8,3 +8,4 @@ h.set_today();
 h.set_use_hebrew(true);
 
 print (h.to_string());
+
