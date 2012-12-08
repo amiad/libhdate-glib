@@ -1,0 +1,12 @@
+{
+  "description": "Hdate date button.", 
+  "extension-id": "hdate", 
+  "gettext-domain": "hdate_button", 
+  "name": "Hdate", 
+  "shell-version": [
+    "3.4", 
+    "3.6"
+  ],
+  "uuid": "hdate@kobi", 
+  "version": 1
+}
