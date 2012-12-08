@@ -11,6 +11,8 @@ h.set_today();
 // force hebrew output
 h.set_use_hebrew(true);
 
+print (h.hdate.get_jd());
+
 // print the date
 print (h.to_string());
 
