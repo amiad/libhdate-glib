@@ -24,36 +24,32 @@ const HdateButton = new Lang.Class({
         this.buttonText=new St.Label();
         this.actor.add_actor(this.buttonText);
         
-        this._label = new St.Label();
-        this.actor.add_actor(this._label);
-        
         // init the hebrew date object
         this.h = Hdate.new();
-        this.jd = 0;
-        
-        // get times for tel aviv (utc time)
         this.h.set_longitude(34.77);
         this.h.set_latitude(32.07);
         this.h.set_tz(2);
         this.h.set_dst(0);
-        
+        this.jd = 0;
+
         // force long format hebrew output
         this.h.set_use_hebrew(true);
         this.h.set_use_short_format(false);
-        
-        // update label and menu evry 60 secs
-        this._refresh_rate = 60;
-        
-        // menu items
+       
+        // init empty menu items
         this._sunrise = null;
         this._sunset = null;
         this._sep = null;
         this._first_light = null;
         this._first_stars = null;
         this._three_stars = null;
-
-        this._refresh();
+        
+        // check label and menu evry 60 secs
+        this._refresh_rate = 60;
         this._timeout = Mainloop.timeout_add_seconds(this._refresh_rate, Lang.bind(this, this._refresh));
+        
+        // refresh view
+        this._refresh();
     },
 
     _refresh: function() {
