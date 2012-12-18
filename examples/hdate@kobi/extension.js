@@ -1,37 +1,29 @@
-// based on amiad hdate#hatul.info Hdate extension
+// based on amiads hdate@hatul.info Hdate extension
 // see:
 //    https://github.com/amiad/gnome-hdate
 
-const St = imports.gi.St;
 const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
+const St = imports.gi.St;
 const Main = imports.ui.main;
-const Lang = imports.lang;
+const Shell = imports.gi.Shell;
 const Mainloop = imports.mainloop;
-const Gettext = imports.gettext.domain('hdate_button');
-const _ = Gettext.gettext;
+const Lang = imports.lang;
+const PopupMenu = imports.ui.popupMenu;
 const Hdate = imports.gi.LibHdateGlib.Hdate;
 
-function init() 
-{
-    return new HdateButton();
-}
+let _hdateButton = null;
 
-function HdateButton()
-{
-    this._init();
-}
-
-HdateButton.prototype = {
-    __proto__: PanelMenu.Button.prototype,
+const HdateButton = new Lang.Class({
+    Name: 'HdateButton',
+    Extends: PanelMenu.Button,
 
     _init: function() {
-        PanelMenu.Button.prototype._init.call(this, St.Align.START);
+        this.parent(0.0, "Hdate Button", false);
         
-        this.updateTimeout = 60000;
-        this.isRunning = false;
-        this.forceHebrew = true;
-
+        // make label 
+        this.buttonText=new St.Label();
+        this.actor.add_actor(this.buttonText);
+        
         this._label = new St.Label();
         this.actor.add_actor(this._label);
         
@@ -42,74 +34,29 @@ HdateButton.prototype = {
         // get times for tel aviv (utc time)
         this.h.set_longitude(34.77);
         this.h.set_latitude(32.07);
-
-        // force long format hebrew output
-        this.h.set_use_hebrew( this.forceHebrew );
-        this.h.set_use_short_format( false );
-    },
-
-    enable: function() {
-        Main.panel._centerBox.insert_child_at_index(this.actor, 0);
-        Main.panel._menus.addMenu(this.menu);
-        
-        this.jd = 0;
-        this.isRunning = true; 
-        this._updateLable();
-    },
-
-    disable: function() {
-        this.isRunning = false; 
-        this.menu.removeAll();
-        Main.panel._menus.removeMenu(this.menu);
-        Main.panel._rightBox.remove_actor(this.actor);
-    },
-
-    _onButtonPress: function(actor, event) {
-        this.menu.removeAll();
-        this._buildContextMenu(); 
-       
-        return PanelMenu.Button.prototype._onButtonPress.call(this, actor, event);
-    },
-
-    _buildContextMenu: function() {
-        var sunrise = this.h.get_sunrise()
-        var sunset = this.h.get_sunset()
-        var first_light = this.h.get_first_light()
-        var talit = this.h.get_talit()
-        var first_stars = this.h.get_first_stars()
-        var three_stars = this.h.get_three_stars()
-
-        // print times in israel tz=2 dst=0
-        // require for min_to_string function
         this.h.set_tz(2);
         this.h.set_dst(0);
-
-        this.sunrise = new PopupMenu.PopupMenuItem(
-            _("Sunrise - ") + this.h.min_to_string(sunrise));
-        this.menu.addMenuItem(this.sunrise);
-        this.ef = new PopupMenu.PopupMenuItem(
-            _("Sunset - ") + this.h.min_to_string(sunset));
-        this.menu.addMenuItem(this.ef);
         
-        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+        // force long format hebrew output
+        this.h.set_use_hebrew(true);
+        this.h.set_use_short_format(false);
+        
+        // update label and menu evry 60 secs
+        this._refresh_rate = 60;
+        
+        // menu items
+        this._sunrise = null;
+        this._sunset = null;
+        this._sep = null;
+        this._first_light = null;
+        this._first_stars = null;
+        this._three_stars = null;
 
-        this.first_light = new PopupMenu.PopupMenuItem(
-            _("First light - ") + this.h.min_to_string(first_light));
-        this.menu.addMenuItem(this.first_light);
-        this.first_stars = new PopupMenu.PopupMenuItem(
-            _("First stars - ") + this.h.min_to_string(first_stars));
-        this.menu.addMenuItem(this.first_stars);
-        this.three_stars = new PopupMenu.PopupMenuItem(
-            _("Three stars - ") + this.h.min_to_string(three_stars));
-        this.menu.addMenuItem(this.three_stars);
+        this._refresh();
+        this._timeout = Mainloop.timeout_add_seconds(this._refresh_rate, Lang.bind(this, this._refresh));
     },
-    
-    _updateLable: function () {
-        // check extension state
-        if ( !this.isRunning ) {
-            return;
-        }
-        
+
+    _refresh: function() {
         // set the h object date to today 
         // and repaint if we did not paint this day
         this.h.set_today();
@@ -126,16 +73,86 @@ HdateButton.prototype = {
               label_string += ", " + this.h.get_holyday_string( holyday );
             }
             
-            this._label.set_text(label_string);
+            this.buttonText.set_text(label_string);
+            
+            // create the menu
+            var sunrise = this.h.get_sunrise()
+            var sunset = this.h.get_sunset()
+            var first_light = this.h.get_first_light()
+            var talit = this.h.get_talit()
+            var first_stars = this.h.get_first_stars()
+            var three_stars = this.h.get_three_stars()
+            
+            if (this._sunrise)
+                this._sunrise.destroy();
+            if (this._sunset)
+                this._sunset.destroy();
+            if (this._sep)
+                this._sep.destroy();
+            if (this._first_light)
+                this._first_light.destroy();
+            if (this._first_stars)
+                this._first_stars.destroy();
+            if (this._three_stars)
+                this._three_stars.destroy();
+
+            this._sunrise = new PopupMenu.PopupMenuItem(
+                _("Sunrise - ") + this.h.min_to_string(sunrise));
+            this._sunset = new PopupMenu.PopupMenuItem(
+                _("Sunset - ") + this.h.min_to_string(sunset));
+            this._sep = new PopupMenu.PopupSeparatorMenuItem();
+            this._first_light = new PopupMenu.PopupMenuItem(
+                _("First light - ") + this.h.min_to_string(first_light));
+            this._first_stars = new PopupMenu.PopupMenuItem(
+                _("First stars - ") + this.h.min_to_string(first_stars));
+            this._three_stars = new PopupMenu.PopupMenuItem(
+                _("Three stars - ") + this.h.min_to_string(three_stars));
+            
+            this.menu.addMenuItem(this._sunrise);
+            this.menu.addMenuItem(this._sunset);
+            this.menu.addMenuItem(this._sep);
+            this.menu.addMenuItem(this._first_light);
+            this.menu.addMenuItem(this._first_stars);
+            this.menu.addMenuItem(this._three_stars);
         }
         
         // remember the last day painted
         this.jd = this.h.get_julian();
         
-        // reset the timeout
-        Mainloop.timeout_add( this.updateTimeout, Lang.bind(this, function() {
-            this._updateLable();
-        }));
+        return true;
+    },
+
+    destroy: function() {
+        if(this._timeout) {
+            Mainloop.source_remove(this._timeout);
+            this._timeout = null;
+        }
+        this.parent();
+    }
+});
+
+// init function
+function init(metadata) {
+}
+
+// enable function
+function enable() {
+    try {
+        _hdateButton = new HdateButton;
+        Main.panel.addToStatusArea('hdate-button', _hdateButton);
+    }
+    catch(err) {
+        global.log("Error: Hdate button extension: " + err.message);
+        _hdateButton.destroy();
+        _hdateButton = null;
+    }
+}
+
+// disable function
+function disable() {
+    if(_hdateButton) {
+        _hdateButton.destroy();
+        _hdateButton = null;
     }
 }
 
