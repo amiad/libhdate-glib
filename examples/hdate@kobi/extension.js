@@ -21,7 +21,7 @@ const HdateButton = new Lang.Class({
         this.parent(0.0, "Hdate Button", false);
         
         // make label 
-        this.buttonText=new St.Label();
+        this.buttonText = new St.Label();
         this.actor.add_actor(this.buttonText);
         
         // init the hebrew date object
@@ -51,65 +51,79 @@ const HdateButton = new Lang.Class({
         // refresh view
         this._refresh();
     },
+    
+    _refresh_button_label: function() {
+        // create the hebrew date label. we can use the standart this.h.to_string()
+        // function or create the string.
+        let label_string = this.h.get_int_string( this.h.get_hday() );
+        label_string += " " + this.h.get_hebrew_month_string( this.h.get_hmonth() );
+        label_string += " " + this.h.get_int_string( this.h.get_hyear() );
+        
+        // check for holiday
+        let holyday = this.h.get_holyday();
+        if (holyday != 0) {
+          label_string += ", " + this.h.get_holyday_string( holyday );
+        }
+        
+        // set the button label
+        this.buttonText.set_text(label_string);
+    },
+    
+    _refresh_button_menu: function() {
+        // remove the old menu items
+        if (this._sunrise)
+            this._sunrise.destroy();
+        if (this._sunset)
+            this._sunset.destroy();
+        if (this._sep)
+            this._sep.destroy();
+        if (this._first_light)
+            this._first_light.destroy();
+        if (this._first_stars)
+            this._first_stars.destroy();
+        if (this._three_stars)
+            this._three_stars.destroy();
 
+        // get the time-of-day times
+        var sunrise = this.h.get_sunrise()
+        var sunset = this.h.get_sunset()
+        var first_light = this.h.get_first_light()
+        var talit = this.h.get_talit()
+        var first_stars = this.h.get_first_stars()
+        var three_stars = this.h.get_three_stars()
+        
+        // create new menu items
+        this._sunrise = new PopupMenu.PopupMenuItem(
+            _("Sunrise - ") + this.h.min_to_string(sunrise));
+        this._sunset = new PopupMenu.PopupMenuItem(
+            _("Sunset - ") + this.h.min_to_string(sunset));
+        this._sep = new PopupMenu.PopupSeparatorMenuItem();
+        this._first_light = new PopupMenu.PopupMenuItem(
+            _("First light - ") + this.h.min_to_string(first_light));
+        this._first_stars = new PopupMenu.PopupMenuItem(
+            _("First stars - ") + this.h.min_to_string(first_stars));
+        this._three_stars = new PopupMenu.PopupMenuItem(
+            _("Three stars - ") + this.h.min_to_string(three_stars));
+        
+        this.menu.addMenuItem(this._sunrise);
+        this.menu.addMenuItem(this._sunset);
+        this.menu.addMenuItem(this._sep);
+        this.menu.addMenuItem(this._first_light);
+        this.menu.addMenuItem(this._first_stars);
+        this.menu.addMenuItem(this._three_stars);
+    },
+    
     _refresh: function() {
         // set the h object date to today 
-        // and repaint if we did not paint this day
         this.h.set_today();
+        
+        // repaint if we did not paint this day
         if ( this.h.get_julian() != this.jd ) {
-            // create the hebrew date label. we can use the standart this.h.to_string()
-            // function or create the string.
-            let label_string = this.h.get_int_string( this.h.get_hday() );
-            label_string += " " + this.h.get_hebrew_month_string( this.h.get_hmonth() );
-            label_string += " " + this.h.get_int_string( this.h.get_hyear() );
+            // set the hebrew date label.
+            this._refresh_button_label();
             
-            // check for holiday
-            let holyday = this.h.get_holyday();
-            if (holyday != 0) {
-              label_string += ", " + this.h.get_holyday_string( holyday );
-            }
-            
-            this.buttonText.set_text(label_string);
-            
-            // create the menu
-            var sunrise = this.h.get_sunrise()
-            var sunset = this.h.get_sunset()
-            var first_light = this.h.get_first_light()
-            var talit = this.h.get_talit()
-            var first_stars = this.h.get_first_stars()
-            var three_stars = this.h.get_three_stars()
-            
-            if (this._sunrise)
-                this._sunrise.destroy();
-            if (this._sunset)
-                this._sunset.destroy();
-            if (this._sep)
-                this._sep.destroy();
-            if (this._first_light)
-                this._first_light.destroy();
-            if (this._first_stars)
-                this._first_stars.destroy();
-            if (this._three_stars)
-                this._three_stars.destroy();
-
-            this._sunrise = new PopupMenu.PopupMenuItem(
-                _("Sunrise - ") + this.h.min_to_string(sunrise));
-            this._sunset = new PopupMenu.PopupMenuItem(
-                _("Sunset - ") + this.h.min_to_string(sunset));
-            this._sep = new PopupMenu.PopupSeparatorMenuItem();
-            this._first_light = new PopupMenu.PopupMenuItem(
-                _("First light - ") + this.h.min_to_string(first_light));
-            this._first_stars = new PopupMenu.PopupMenuItem(
-                _("First stars - ") + this.h.min_to_string(first_stars));
-            this._three_stars = new PopupMenu.PopupMenuItem(
-                _("Three stars - ") + this.h.min_to_string(three_stars));
-            
-            this.menu.addMenuItem(this._sunrise);
-            this.menu.addMenuItem(this._sunset);
-            this.menu.addMenuItem(this._sep);
-            this.menu.addMenuItem(this._first_light);
-            this.menu.addMenuItem(this._first_stars);
-            this.menu.addMenuItem(this._three_stars);
+            // set the menu
+            this._refresh_button_menu();
         }
         
         // remember the last day painted
