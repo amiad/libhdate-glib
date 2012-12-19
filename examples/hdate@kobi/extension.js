@@ -9,7 +9,36 @@ const Shell = imports.gi.Shell;
 const Mainloop = imports.mainloop;
 const Lang = imports.lang;
 const PopupMenu = imports.ui.popupMenu;
+const ExtensionUtils = imports.misc.extensionUtils;
+const Config = imports.misc.config;
+
 const Hdate = imports.gi.LibHdateGlib.Hdate;
+
+/* start of translation functionality 
+
+    to translate:
+    1. xgettext -k_ -kN_ -o messages.pot extension.js
+    2. create the he.po file
+    3. msgfmt he.po -o locale/he/LC_MESSAGES/hdate_button.mo
+    
+    to update:
+    1. msgmerge -U he.po messages.pot
+ */
+let domain = "hdate_button"
+let extension = ExtensionUtils.getCurrentExtension();
+let locale_dir = extension.dir.get_child('locale');
+
+const Gettext = imports.gettext;
+Gettext.textdomain(domain);
+
+if (locale_dir.query_exists(null))
+    Gettext.bindtextdomain(domain, locale_dir.get_path());
+else
+    Gettext.bindtextdomain(domain, Config.LOCALEDIR);
+
+const _ = Gettext.gettext;
+
+/* end of translation functionality */
 
 let _hdateButton = null;
 
@@ -149,7 +178,8 @@ function init(metadata) {
 function enable() {
     try {
         _hdateButton = new HdateButton;
-        Main.panel.addToStatusArea('hdate-button', _hdateButton);
+        Main.panel.addToStatusArea('hdate-button', _hdateButton, 0, "right");
+        //Main.panel._rightBox.insert_child_at_index(_hdateButton, 0);
     }
     catch(err) {
         global.log("Error: Hdate button extension: " + err.message);
