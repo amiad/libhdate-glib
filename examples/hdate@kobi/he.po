@@ -31,8 +31,8 @@ msgstr "אור ראשון - "
 
 #: extension.js:133
 msgid "First stars - "
-msgstr "צאת הכוחבים -"
+msgstr "צאת הכוכבים -"
 
 #: extension.js:135
 msgid "Three stars - "
-msgstr "שלושה כוחבים - "
+msgstr "שלושה כוכבים - "

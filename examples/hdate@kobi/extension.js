@@ -11,6 +11,7 @@ const Lang = imports.lang;
 const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Config = imports.misc.config;
+const Gettext = imports.gettext;
 
 const Hdate = imports.gi.LibHdateGlib.Hdate;
 
@@ -28,9 +29,7 @@ let domain = "hdate_button"
 let extension = ExtensionUtils.getCurrentExtension();
 let locale_dir = extension.dir.get_child('locale');
 
-const Gettext = imports.gettext;
 Gettext.textdomain(domain);
-
 if (locale_dir.query_exists(null))
     Gettext.bindtextdomain(domain, locale_dir.get_path());
 else
